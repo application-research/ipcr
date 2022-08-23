@@ -1,6 +1,6 @@
 # Interplanetary Container Registry
 
-tlwr;
+tldr;
 ```
 $ docker tag example/helloworld ipcr.io/helloworld:v1
 $ docker push ipcr.io/helloworld:v1
