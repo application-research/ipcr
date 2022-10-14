@@ -219,7 +219,11 @@ func (e *EstuaryClient) GetContentByCid(cid string) (ContentElement, error) {
 	var contentElements []ContentElement
 	json.Unmarshal(body, &contentElements)
 
-	return contentElements[0], nil
+	if len(contentElements) == 0 {
+		return ContentElement{}, fmt.Errorf("content not found for cid: %s", cid)
+	} else {
+		return contentElements[0], nil
+	}
 }
 
 func (e *EstuaryClient) GetContentByName(name string) (PinnedElement, error) {
