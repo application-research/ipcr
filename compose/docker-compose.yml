@@ -1,0 +1,21 @@
+nginx:
+  build: "nginx"
+  ports:
+    - "5005:5000"
+  links:
+    - pass-through:pass-through
+    - registry:registry
+pass-through:
+  build: "../"
+  dockerfile: pass-through.Dockerfile
+  ports:
+    - "5000"
+  volumes:
+    - /Users/luc/registries/estuary-prod:/var/lib/registry:rw
+registry:
+  build: "../"
+  dockerfile: registry.Dockerfile
+  ports:
+    - "5000"
+  volumes:
+    - /Users/luc/registries/estuary-prod:/var/lib/registry:rw
