@@ -12,7 +12,7 @@ ENV CGO_ENABLED=0
 WORKDIR /src
 
 FROM base AS version
-ARG PKG=https://github.com/application-research/lighthouse
+ARG PKG=https://github.com/application-research/ipcr
 RUN --mount=target=. \
   VERSION=$(git describe --match 'v[0-9]*' --dirty='.m' --always --tags) REVISION=$(git rev-parse HEAD)$(if ! git diff --no-ext-diff --quiet --exit-code; then echo .m; fi); \
   echo "-X ${PKG}/version.Version=${VERSION#v} -X ${PKG}/version.Revision=${REVISION} -X ${PKG}/version.Package=${PKG}" | tee /tmp/.ldflags; \
@@ -52,7 +52,7 @@ COPY --from=releaser /out /
 FROM alpine:3.16
 ARG ESTUARY_TOKEN
 RUN apk add --no-cache ca-certificates
-COPY cmd/registry/config-lighthouse.yml /etc/docker/registry/config.yml
+COPY cmd/registry/config-ipcr.yml /etc/docker/registry/config.yml
 RUN sed -i "s/TOKEN_GOES_HERE/$ESTUARY_TOKEN/" /etc/docker/registry/config.yml 
 COPY --from=binary /registry /bin/registry
 VOLUME ["/var/lib/registry"]

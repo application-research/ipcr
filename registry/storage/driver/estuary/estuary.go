@@ -20,9 +20,9 @@ import (
 
 const (
 	driverName           = "estuary"
-	defaultRootDirectory = "/var/lib/registry"
+	defaultRootDirectory = "/var/lib/estuary"
 	defaultBaseUrl       = "https://api.estuary.tech"
-	defaultShuttleUrl    = "https://shuttle-4.estuary.tech"
+	defaultShuttleUrl    = "https://api.estuary.tech"
 	defaultMaxThreads    = uint64(100)
 
 	// minThreads is the minimum value for the maxthreads configuration
@@ -191,6 +191,20 @@ func (d *driver) PutContent(ctx context.Context, subPath string, contents []byte
 	return nil
 }
 
+func getGatewayRedirect2(cidHash string) (string, error) {
+	url := fmt.Sprintf("https://api.estuary.tech/gw/ipfs/%s", cidHash)
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	fmt.Printf(">>>>> %s\n", resp.Request.URL.String())
+	return resp.Request.URL.String(), nil
+}
+
+func getGatewayRedirect(cidHash string) (string, error) {
+	return fmt.Sprintf("https://%s.ipfs.dweb.link", cidHash), nil
+}
+
 // Reader retrieves an io.ReadCloser for the content stored at "path" with a
 // given byte offset.
 func (d *driver) Reader(ctx context.Context, inPath string, offset int64) (io.ReadCloser, error) {
@@ -199,8 +213,11 @@ func (d *driver) Reader(ctx context.Context, inPath string, offset int64) (io.Re
 		if err != nil {
 			return nil, err
 		}
-		url := fmt.Sprintf("https://%s.ipfs.dweb.link", cidHash)
-		fmt.Println(url)
+
+		url, err := getGatewayRedirect(cidHash)
+		if err != nil {
+			return nil, err
+		}
 
 		resp, err := http.Get(url)
 		if err != nil {
@@ -364,9 +381,9 @@ func (d *driver) URLFor(ctx context.Context, subPath string, options map[string]
 	if err != nil {
 		return "", err
 	}
-	url := fmt.Sprintf("https://%s.ipfs.dweb.link", cidHash)
+	url, err := getGatewayRedirect(cidHash)
 	fmt.Println(url)
-	return url, nil
+	return url, err
 }
 
 // Walk traverses a estuary defined within driver, starting
