@@ -11,11 +11,11 @@ pass-through:
   ports:
     - "5000"
   volumes:
-    - /Users/luc/registries/estuary-prod:/var/lib/registry:rw
+    - /PATH/TO/LIBRARY:/var/lib/registry:rw
 registry:
   build: "../"
   dockerfile: registry.Dockerfile
   ports:
     - "5000"
   volumes:
-    - /Users/luc/registries/estuary-prod:/var/lib/registry:rw
+    - /PATH/TO/LIBRARY:/var/lib/registry:rw
