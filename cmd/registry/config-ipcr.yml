@@ -6,6 +6,8 @@ log:
 storage:
   redirect:
     disable: false
+  cache:
+    blobdescriptor: inmemory
   
   estuary:
     url: https://api.estuary.tech
