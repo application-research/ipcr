@@ -1,0 +1,28 @@
+version: 0.1
+log:
+  fields:
+    service: pass-through
+
+storage:
+  redirect:
+    disable: false
+
+  estuary:
+    url: https://api.estuary.tech
+    shuttle-url: https://shuttle-4.estuary.tech
+    auth-token: TOKEN_GOES_HERE
+    rootdirectory: /var/lib/registry
+
+http:
+  addr: :5000
+  relativeurls: true
+  headers:
+    X-Content-Type-Options: [nosniff]
+health:
+  storagedriver:
+    enabled: true
+    interval: 10s
+    threshold: 3
+
+proxy:
+  remoteurl: https://registry-1.docker.io
